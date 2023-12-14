@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>
+        {% block title %}{{ event_info['name'] }}{% endblock %}
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wtforms_messages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/photo_editor.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css"/>
+
+    {#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"/>#}
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>#}
+</head>
+
+<body>
+{% block main %}
+    <span style="font-size: 26px; font-weight: 500; margin-left: 20px">Редактирование мероприятия</span>
+    <form action="/event/create" method="post" enctype="multipart/form-data">
+        <div style="margin-left: 20px">
+            <div class="card card-body border-0 shadow "
+                 style="margin-bottom: 20px; background-color: #c2c2c2; margin-top: 10px; height: 40px">
+                <div style="display: flex;">
+                    <span style="font-size: 18px; font-weight: 500; margin-top: -13px ">Основная информация</span>
+                </div>
+            </div>
+
+            <div style="display: flex;">
+                <label for="organizerId">Организатор:
+                    <select id="organizerId" name="organizerId" required>
+                        {% for organizer in user_organizers %}
+                            <option value="{{ organizer['id'] }}">{{ organizer['name'] }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <div style="position: absolute; left: 580px">
+                    <label for="description">Описание:</label>
+                    <textarea class="form-control" id="description" maxlength="800" name="description"
+                              placeholder="" rows=14, style='width: 500px; color: black; resize: none;'
+                    >{{ event_info['description'] }}
+        </textarea>
+                </div>
+                <div style="position: absolute; left: 1115px">
+                    <label for="concession">Концессии (необязательно): </label>
+                    <textarea class="form-control" id="concession" name="concession"
+                              style='width: 350px; color: black; resize: none;' rows=7
+                    >{{ event_info['concession'] }}
+        </textarea>
+                </div>
+            </div>
+            <div class="mt-1 mb-1">
+                <label for="genreId">Жанр:
+                    <select id="genreId" name="genreId" required>
+                        {% for genre in genres %}
+                            <option value="{{ genre['id'] }}"
+                                    {% if event_info['genreId'] == genre['id'] %}
+                                    selected{% endif %}>{{ genre['name'] }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+
+            <label for="name">Название:</label>
+            <div>
+                <input class="form-control" id="name" maxlength="150" name="name" placeholder="" required=""
+                       type="text" style='width: 250px; color: black; margin-bottom: 10px'
+                       value="{{ event_info['name'] }}">
+            </div>
+
+            <label for="countOfMembers">Кол-во участников:</label>
+            <div class="form-group" style="width: 250px; margin-bottom: 10px">
+                <input class="form-control" id="countOfMembers" name="countOfMembers" placeholder="" required=""
+                       type="number" style='color: black' value="{{ event_info['countOfMembers'] }}">
+            </div>
+
+            <div>
+                <label for="validateStatus">Валидация участников: </label>
+                <ul style="list-style-type: none; margin-left: -30px">
+                    <li><input type="radio" id="validateStatus" name="validateStatus" value="REQUIRED"
+                               {% if event_info['validateStatus'][19:] == 'REQUIRED' %}checked{% endif %}>
+                        Обязательно
+                    </li>
+                    <li><input type="radio" id="validateStatus" name="validateStatus" value="OPTIONAL"
+                               {% if event_info['validateStatus'][19:] == 'OPTIONAL' %}checked{% endif %}>
+                        Необязательно
+                    </li>
+                    <li><input type="radio" id="validateStatus" name="validateStatus" value="NOT_REQUIRED"
+                               {% if event_info['validateStatus'][19:] == 'NOT_REQUIRED' %}checked{% endif %}> Без
+                        валидации
+                    </li>
+                </ul>
+            </div>
+            <div style="margin-top: 10px">
+                <h5>Даты и время проведения:</h5>
+                <div id="dateTimeContainer" style="display: flex; width: 250px">
+                    <div>
+                        <div style="width: max-content;">
+                            <label for="startDateTime">Начало:</label>
+                            <div style="text-align: center">
+                                <input class="form-control" id="startDateTime" name="startDateTime" required=""
+                                       type="datetime-local" style='color: black; width: 250px'
+                                       value="{{ event_info['eventDates'][0]['startDateTime'] }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-left: 35px; width: max-content;">
+                        <label for="endDateTime">Окончание:</label>
+                        <input class='form-control' id="endDateTime" name="endDateTime" required=""
+                               style='color: black; width: 250px' type="datetime-local"
+                               value="{{ event_info['eventDates'][0]['endDateTime'] }}">
+                    </div>
+                </div>
+
+                <div class="card card-body border-0 shadow"
+                     style="margin-bottom: 15px; background-color: #c2c2c2; margin-top: 15px; height: 40px">
+                    <div style="display: flex;">
+                        <span style="font-size: 18px; font-weight: 500; margin-top: -13px ">Место проведения</span>
+                    </div>
+                </div>
+
+                <div style="display: flex">
+                    <div style="display: table">
+                        <div>
+                            <label for="venueName">Название:</label>
+                            <input class="form-control" id="venueName" maxlength="150" name="venueName"
+                                   placeholder="" required="" style='color: black; width: 250px'
+                                   type="text" value="{{ event_info['venues'][0]['name'] }}">
+                        </div>
+                        <div>
+                            <label for="country">Страна:</label>
+                            <input class="form-control" id="country" maxlength="150" name="country" placeholder=""
+                                   required="" style='color: black; width: 250px'
+                                   type="text"
+                                   value="{{ event_info['venues'][0]['city']['state']['country']['name'] }}">
+                        </div>
+                        <div>
+                            <label for="state">Регион:</label>
+                            <input class="form-control" id="state" maxlength="150" name="state" placeholder=""
+                                   required="" style='color: black; width: 250px'
+                                   type="text"
+                                   value="{{ event_info['venues'][0]['city']['state']['name'] }}">
+                        </div>
+                        <div>
+                            <label for="city">Город:</label>
+                            <input class="form-control" id="city" maxlength="150" name="city" placeholder=""
+                                   required="" type="text" style='color: black; width: 250px'
+                                   value="{{ event_info['venues'][0]['city']['name'] }}">
+                        </div>
+
+                        <div>
+                            <label for="address">Улица, дом:</label>
+                            <input class="form-control" id="address" maxlength="150" name="address" placeholder=""
+                                   required="" style='color: black; width: 250px'
+                                   type="text" value="{{ event_info['venues'][0]['address'] }}">
+                        </div>
+
+                        <div>
+                            <label for="seats">Кол-во сидячих мест:</label>
+                            <input class="form-control" id="seats" min="0" name="seats" placeholder=""
+                                   type="number" style='color: black; width: 250px'
+                                   value="0">
+                        </div>
+
+                    </div>
+
+
+                    <span class="mb-4" style="margin-left: 52px; font-weight: 500;">Фотография:</span>
+                    <div class="card card-body border-0 shadow"
+                         style="margin-top: 32px; width: 800px; height: 350px; position: absolute;  left: 600px;">
+                        <div class="align-items-center">
+                            <div class="d-flex">
+                                <div>
+                                    <div class="d-flex mb-3">
+                                        <svg class="icon text-gray-500 me-2" fill="currentColor"
+                                             viewBox="0 0 20 20"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                  d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                  clip-rule="evenodd"></path>
+                                        </svg>
+                                        <div class="d-md-block text-left">
+                                            <div class="fw-normal text-dark mb-1">Загрузите фотографию</div>
+                                            <div class="text-gray small">JPG/JPEG или PNG.</div>
+                                        </div>
+                                    </div>
+                                    <input type="file" id="venueImage" name="photos"
+                                           accept="image/jpeg, image/png"/>
+                                </div>
+                                <div style="width: 400px; height: 300px; margin-left: -20px">
+                                    <img id="venueImageEdit"
+                                         src="{{ event_info['venues'][0]['photos'][0] }}"
+                                         alt="Фотография места мероприятия"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 390px; margin-left: -100px">
+                        <label for="venueDescription">Описание места:</label>
+                        <textarea class="form-control" id="venueDescription" maxlength="800" name="description"
+                                  placeholder="" rows=7, style=';width: 800px; color: black; resize: none;'
+                        >{{ event_info['venues'][0]['description'] }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 25px;margin-bottom: 50px; display: flex; justify-content: center">
+            <button class="btn btn-secondary d-flex align-items-center justify-content-center">Сохранить изменения
+            </button>
+            <a class="btn btn-gray-800 d-inline-flex align-items-center me-2" style="margin-left: 20px"
+               href="/">Назад</a>
+        </div>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+    <script src="{{ url_for('static', filename='js/photo_editor.js') }}"></script>
+{% endblock %}
+<script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/@popperjs/core/dist/umd/popper.min.js"></script>
+<script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

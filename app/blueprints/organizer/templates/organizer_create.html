@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание огранизатора</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wtforms_messages.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/photo_editor.css') }}">
+
+</head>
+<body>
+<form action="/organizer/create" method="post" enctype="multipart/form-data">
+    <div style="display: flex">
+        <div>
+            {{ form.hidden_tag() }}
+            {% for field in form if field.name not in ['csrf_token', 'submit'] %}
+                {{ field.label() }}
+                <div>
+                    {% if field.errors %}
+                        {{ field(style='background-color: #f2dede; width: 250px; color: black',
+                                                            class="form-control mb-2", placeholder=field.description) }}
+                        <div style="text-align: center; font-size: 14px; color: #a94442">
+                            {{ field.errors[0] }}
+                        </div>
+                    {% else %}
+                        {{ field(style='width: 250px; color: black',
+                                                            class="form-control mb-2", placeholder=field.description) }}
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <div style="margin-left: 35px; display: flex">
+            <div style="width: 500px">
+                <h4>Фотография</h4>
+                <div>
+                    <img src="{{ default_logo }}" width="250" height="250" alt="default logo">
+                </div>
+                <label for="avatarImage">Фотография: </label>
+                <input type="file" id="avatarImage" name="logo" accept="image/jpeg, image/png"/>
+                <div>
+                    <img id="avatarImageEdit" width="500" height="260" src="" alt="Фотография профиля (upload)"/>
+                </div>
+            </div>
+            <div style="margin-left: 25px">
+                <h4>Обложка</h4>
+                <div>
+                    <img src="{{ default_background }}" width="500" height="250" alt="default background">
+                </div>
+                <label for="backgroundImage">Обложка: </label>
+                <input type="file" id="backgroundImage" name="background" accept="image/jpeg, image/png"/>
+                <div>
+                    <img id="backgroundImageEdit" width="500" height="260" src="" alt="Обложка профиля (upload)"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top: 20px">
+        {{ form.submit() }}
+        <a href="/">Назад</a>
+    </div>
+</form>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+<script src="{{ url_for('static', filename='js/photo_editor.js') }}"></script>
+</body>
+</html>

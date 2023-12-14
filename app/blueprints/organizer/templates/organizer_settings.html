@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Настройки организатора</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wtforms_messages.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/photo_editor.css') }}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../static/js/organizer_info.js"></script>
+</head>
+
+<body>
+<div>
+    <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="{{ message[0] }}" style="text-align: center; margin-top: -10px">
+                        {{ message[1] }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div style="display: flex;">
+        <form action="/organizer/settings/{{ id }}" method="post">
+            <div>
+                <h4>Организатор</h4>
+                <p></p>
+                <label for="name">Имя: </label>
+                <input type="text" id="name" name="name" value="{{ organizer_info['name'] }}">
+                <p></p>
+                <label for="description">Описание: </label>
+                <textarea name="description" id="description" cols="30"
+                          rows="5">{{ organizer_info['description'] }}</textarea>
+                <p></p>
+                <h4>Данные о банковской карте</h4>
+                <p></p>
+                <label for="cardNumber">Номер банковской карты: </label>
+                <input type="text" id="cardNumber" name="cardNumber" value="{{ organizer_info['cardNumber'] }}"
+                       required>
+                <p></p>
+                <label for="cardHolderName">Держатель карты: </label>
+                <input type="text" id="cardHolderName" name="cardHolderName"
+                       value="{{ organizer_info['cardHolderName'] }}">
+                <p></p>
+                <h4>Социальные сети</h4>
+                <p></p>
+                <label for="vk">VK: </label>
+                <input type="text" id="vk" name="vk" value="{{ organizer_info['vk'] }}">
+                <p></p>
+                <label for="telegram">Telegram: </label>
+                <input type="text" id="telegram" name="telegram" value="{{ organizer_info['telegram'] }}">
+                <p></p>
+                <label for="instagram">Instagram: </label>
+                <input type="text" id="instagram" name="instagram" value="{{ organizer_info['instagram'] }}">
+                <p></p>
+                <label for="facebook">Facebook: </label>
+                <input type="text" id="facebook" name="facebook" value="{{ organizer_info['facebook'] }}">
+                <p></p>
+                <label for="twitter">Twitter: </label>
+                <input type="text" id="twitter" name="twitter" value="{{ organizer_info['twitter'] }}">
+                <p></p>
+                <button type="submit">Сохранить изменения</button>
+                <a href="/">Назад</a>
+            </div>
+        </form>
+        {# ------------------------------- #}
+        <div style="margin-left: 35px">
+            <div>
+                <h4>Фотография</h4>
+                <img src="{{ organizer_info['logo'] }}" alt="{{ organizer_info['logo'] }}">
+
+                <form action="/organizer/settings/{{ id }}" method="post" enctype="multipart/form-data">
+                    <label for="avatarImage">Фотография: </label>
+                    <input type="file" id="avatarImage" name="logo" accept="image/jpeg, image/png"/>
+                    <div style="width: 640px; height: 360px">
+                        <img id="avatarImageEdit" src="" alt="Фотография профиля (upload)"/>
+                    </div>
+                    <button id="avatarImageSubmit" type="submit">Загрузить</button>
+                </form>
+            </div>
+
+            <div>
+                <h4>Обложка</h4>
+                <img src="{{ organizer_info['background'] }}" alt="{{ organizer_info['background'] }}">
+
+                <form action="/organizer/settings/{{ id }}" method="post" enctype="multipart/form-data">
+                    <label for="backgroundImage">Обложка: </label>
+                    <input type="file" id="backgroundImage" name="background" accept="image/jpeg, image/png"/>
+                    <div style="width: 640px; height: 360px">
+                        <img id="backgroundImageEdit" src="" alt="Обложка профиля (upload)"/>
+                    </div>
+                    <button id="backgroundImageSubmit" type="submit">Загрузить</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+<script src="{{ url_for('static', filename='js/photo_editor.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title%}{% endblock %}
+    </title>
+    <link rel="apple-touch-icon" sizes="120x120"
+          href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/img/favicon/favicon-16x16.png">
+    <link rel="manifest"
+          href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/img/favicon/site.webmanifest">
+    <link rel="mask-icon"
+          href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/img/favicon/safari-pinned-tab.svg"
+          color="#ffffff">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <link type="text/css" href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/css/volt.css"
+          rel="stylesheet">
+    <!-- Core -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/@popperjs/core/dist/umd/popper.min.js"></script>
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Vendor JS -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/onscreen/dist/on-screen.umd.min.js"></script>
+    <!-- Slider -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/nouislider/distribute/nouislider.min.js"></script>
+    <!-- Smooth scroll -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+    <!-- Charts -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/chartist/dist/chartist.min.js"></script>
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <!-- Datepicker -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script>
+    <!-- Sweet Alerts 2 -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <!-- Moment JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+    <!-- Vanilla JS Datepicker -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script>
+    <!-- Notyf -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/notyf/notyf.min.js"></script>
+    <!-- Simplebar -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/simplebar/dist/simplebar.min.js"></script>
+    <!-- Volt JS -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/js/volt.js"></script>
+    <style>
+        .sidebar-text {
+            color: black;
+        }
+
+        .sidebar .nav-item .nav-link:hover {
+            background-color: lightgray;
+        }
+
+        .sidebar .nav-item .nav-link {
+            color: black;
+        }
+
+        .sidebar .nav-item .nav-link:hover {
+            color: black;
+        }
+    </style>
+</head>
+
+<main class="content">
+    <nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-100 text-white collapse" data-simplebar="init">
+        <div class="simplebar-wrapper">
+            <div class="simplebar-height-auto-observer-wrapper">
+                <div class="simplebar-height-auto-observer"></div>
+            </div>
+            <div class="simplebar-mask">
+                <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                    <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden scroll;">
+                        <div class="simplebar-content" style="padding: 0px;">
+                            <div class="sidebar-inner px-4 pt-3">
+                                <ul class="nav flex-column pt-3 pt-md-0">
+                                    <li class="nav-item">
+                                        <a href="/" class="nav-link d-flex align-items-center">
+                  <span>
+                    <img width="800" src="{{ url_for('login.static', filename='img/logo.png') }}" alt="logo">
+                  </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a href="/" class="nav-link">
+                  <span class="sidebar-icon">
+                      <img style="margin-top: -4px" width="24"
+                           src="https://img.icons8.com/?size=512&id=EPWi0qK2GM93&format=png" alt="">
+                  </span>
+                                            <span class="sidebar-text">Мероприятия</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                <span class="nav-link  collapsed  d-flex justify-content-between align-items-center"
+                      data-bs-toggle="collapse" data-bs-target="#submenu-app">
+                  <span>
+                    <span class="sidebar-icon">
+                      <img width="24" src="https://img.icons8.com/?size=512&id=p4tNZB7kgk24&format=png" alt="">
+                    </span>
+                    <span class="sidebar-text">Организатор</span>
+                  </span>
+                  <span class="link-arrow">
+                    <svg class="icon icon-sm" fill="black" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path
+                            fill-rule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                  </span>
+                </span>
+                                        <div class="multi-level collapse " role="list" id="submenu-app"
+                                             aria-expanded="false">
+                                            <ul class="flex-column nav">
+                                                {% for organizer in user_organizers %}
+                                                    <li class="nav-item ">
+                                                        <a class="nav-link" href="/organizer/settings/{{ organizer['id'] }}">
+                                                            <img style="margin-top: -3px" width="20"
+                                                                 src="https://img.icons8.com/?size=512&id=p4tNZB7kgk24&format=png"
+                                                                 alt="">
+                                                            <span class="sidebar-text">{{ organizer['name'] }}</span>
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                                <li class="nav-item ">
+                                                    <a class="nav-link" href="/organizer/create">
+                                                        <img style="margin-top: -3px" width="20"
+                                                             src="https://img.icons8.com/?size=512&id=95779&format=png"
+                                                             alt="">
+                                                        <span class="sidebar-text">Добавить</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a href="/transactions.html" class="nav-link">
+                  <span class="sidebar-icon">
+                    <img style="margin-top: -4px" width="24"
+                         src="https://img.icons8.com/?size=512&id=nYibnpLJ5ypO&format=png" alt="">
+                  </span>
+                                            <span class="sidebar-text">Отзывы</span>
+                                        </a>
+                                    </li>
+                                    <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+
+                                    <li class="nav-item">
+                                        <a target="_blank" href="#"
+                                           class="btn btn-secondary d-flex align-items-center justify-content-center">
+                                            <span>Support</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="simplebar-placeholder" style="width: auto; height: 435px;"></div>
+        </div>
+        <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
+            <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
+        </div>
+        <div class="simplebar-track simplebar-vertical" style="visibility: visible;">
+            <div class="simplebar-scrollbar"
+                 style="height: 131px; display: block; transform: translate3d(0px, 0px, 0px);"></div>
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-0">
+        <div class="container-fluid px-0">
+            <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
+                <div class="d-flex align-items-center">
+                    <!-- Search form -->
+                    <form class="navbar-search form-inline" id="navbar-search-main">
+                        <div class="input-group input-group-merge search-bar">
+                          <span class="input-group-text" id="topbar-addon">
+                            <svg class="icon icon-xs" x-description="Heroicon name: solid/search"
+                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                 aria-hidden="true">
+                              <path fill-rule="evenodd"
+                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                          </span>
+                            <input type="text" class="form-control" id="topbarInputIconLeft" placeholder="Search"
+                                   aria-label="Search" aria-describedby="topbar-addon">
+                        </div>
+                    </form>
+                    <!-- / Search form -->
+                </div>
+                <ul class="navbar-nav align-items-center" style="margin-top: 0px">
+                    <li class="nav-item dropdown ms-lg-3">
+                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                           aria-expanded="true">
+                            <div class="media d-flex align-items-center">
+                                <img width="45" class="rounded-circle" alt="User avatar"
+                                     src="{{ user_info['avatar'] }}">
+                                <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
+                              <span style="font-size: 16px" class="mb-0 fw-bold text-gray-900">
+                              <strong>{{ user_info['firstName'] }} {{ user_info['lastName'] }}</strong>
+                              </span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <div style="width: 240px;" class="dropdown-menu dashboard-dropdown dropdown-menu-end mt-2 py-1"
+                             data-bs-popper="none">
+                            <a class="dropdown-item d-flex align-items-center"
+                               href="#">
+                                <img src="https://img.icons8.com/?size=512&id=ABBSjQJK83zf&format=png"
+                                     class="dropdown-icon text-gray-400 me-2" alt="">
+                                Мой профиль
+                            </a>
+                            <a class="dropdown-item d-flex align-items-center"
+                               href="/user/settings/{{ session['userId'] }}">
+                                <img src="https://img.icons8.com/?size=512&id=Zydyx4gBcOrY&format=png"
+                                     class="dropdown-icon text-gray-400 me-2" alt="">
+                                Персональные настройки
+                            </a>
+
+                            <div role="separator" class="dropdown-divider my-1"></div>
+                            <a class="dropdown-item d-flex align-items-center" href="/logout">
+                                <svg class="dropdown-icon text-danger me-2" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                Выйти
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% block main %}{% endblock %}
+</main>
+</html>

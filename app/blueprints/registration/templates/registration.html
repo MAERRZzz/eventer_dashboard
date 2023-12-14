@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+
+    <link type="text/css" href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/css/volt.css"
+          rel="stylesheet">
+
+    <style>
+        .button {
+            display: block;
+            height: 38px;
+            background: #FFD914;
+            border-radius: 12px;
+            text-transform: uppercase;
+            line-height: 24px;
+            border: none;
+            width: 100%;
+            margin: 0 auto;
+            transition: background .15s linear;
+        }
+
+        .button:hover {
+            background: #FFA914;
+            transition: background .15s linear;
+        }
+    </style>
+
+</head>
+
+<body style="overflow: hidden">
+<main>
+    <section class="vh-lg-100 mt-5 mt-lg-0 bg-soft d-flex align-items-center">
+        <div class="container">
+            <div data-background-lg="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/img/illustrations/signin.svg"
+                 style="scale: 115%;  height: 500px; background: url(&quot;https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/img/illustrations/signin.svg&quot;);">
+                <div class="d-flex justify-content-center" style="scale: 81%">
+                    <div class="bg-white shadow border-0 rounded p-4 p-lg-5" style="width: 598px; margin-top: -85px;">
+                        <div style="text-align: center">
+                            <img style="margin-top: -65px"
+                                 src="{{ url_for('.static', filename='img/logo.svg') }}" alt="logo">
+                        </div>
+                        <div>
+                            <form action="/registration" method="post">
+                                <!-- Form -->
+                                {{ form.hidden_tag() }}
+                                <div style="display: flex; justify-content: center">
+                                    <div class="form-group mb-4">
+                                        <div class="input-group" style="display: table; margin-right: 15px">
+                                            {% for field in form if field.name in ['firstName', 'lastName', 'middleName', 'birthday'] %}
+                                                {{ field.label() }}
+                                                <div>
+                                                {{ field(style='width: 250px; color: black',
+                                                            class="form-control mb-2", placeholder=field.description) }}
+                                                </div>
+
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="form-group mb-4">
+                                            <div class="input-group" style="display: table; margin-left: 15px">
+                                                {% for field in form if field.name in ['email', 'password', 'repeatPassword'] %}
+                                                    {{ field.label() }}
+                                                    <div>
+                                                        {% if field.errors %}
+                                                            {{ field(style='background-color: #f2dede; width: 250px; color: black',
+                                                            class="form-control mb-2", placeholder=field.description) }}
+                                                            <div style="text-align: center; font-size: 14px; color: #a94442">
+                                                                {{ field.errors[0] }}
+                                                            </div>
+                                                        {% else %}
+                                                            {{ field(style='width: 250px; color: black',
+                                                            class="form-control mb-2", placeholder=field.description) }}
+                                                        {% endif %}
+                                                    </div>
+
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- End of Form -->
+                                <div style="text-align: center;">
+                                    {{ form.submit(class="button", style="width: 380px") }}
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="d-flex justify-content-center align-items-center mt-4" style="font-size: 16px">
+                                <span class="fw-normal" style="margin-top: -15px;">
+                                    Уже зарегистрированы?
+                                    <a href="/login" class="fw-bold" style="text-decoration: underline">
+                                        Авторизируйтесь</a>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

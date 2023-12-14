@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='css/style.css') }}">
+</head>
+<body>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+<div class="Main-page">
+    <img class="welcome" src="{{ url_for('.static', filename='img/welcome.svg') }}" alt="WElcom pic">
+    <div style="margin-top: -35px">
+        <img class="logo" src="{{ url_for('.static', filename='img/logo.svg') }}" alt="logo">
+        <div class="login-box">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="{{ message[0] }}" style="text-align: center; margin-top: -10px">
+                            {{ message[1] }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form action="/login" method="POST">
+                {{ form.hidden_tag() }}
+                <div>
+                    {% for field in form if field.name not in ['csrf_token', 'rememberMe', 'submit'] %}
+                        <div>
+                            <h1>{{ field.label(class='form-title') }}</h1>
+                            <div>{{ field(class="form-field", placeholder=field.description) }}</div>
+                        </div>
+                    {% endfor %}
+                    <div class="remember-box" style="margin-top: -15px; margin-bottom: 15px">
+                        <div class="cont">
+                            {{ form.rememberMe() }} {{ form.rememberMe.label(style="white-space: nowrap;margin: auto; padding-left: 5px;") }}
+                        </div>
+                        <a href="#" style="margin: auto 0">Забыли пароль?</a>
+                    </div>
+                </div>
+                {{ form.submit(class='button') }}
+                <span class="center-text fw-normal" style="margin-top: 12px;">
+                    Нет аккаунта?
+                    <a href="/registration" class="fw-bold" style="text-decoration: underline; color: black">
+                        Зарегистрируйтесь</a>
+                </span>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

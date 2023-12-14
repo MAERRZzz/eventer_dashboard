@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>
+        {% block title %}Создание мероприятия{% endblock %}
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wtforms_messages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/photo_editor.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css"/>
+
+    {#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"/>#}
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>#}
+</head>
+
+<body>
+{% block main %}
+    <span style="font-size: 26px; font-weight: 500; margin-left: 20px">Создание мероприятия</span>
+    <form action="/event/create" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div style="margin-left: 20px">
+            <div>
+                <div class="card card-body border-0 shadow "
+                     style="margin-bottom: 20px; background-color: #c2c2c2; margin-top: 10px; height: 40px">
+                    <div style="display: flex;">
+                        <span style="font-size: 18px; font-weight: 500; margin-top: -13px ">Основная информация</span>
+                    </div>
+                </div>
+
+                <div style="display: flex;">
+                    <label for="organizerId">Организатор:
+                        <select id="organizerId" name="organizerId" required>
+                            {% for organizer in user_organizers %}
+                                <option value="{{ organizer['id'] }}">{{ organizer['name'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                    <div style="position: absolute; left: 580px">
+                        {{ form.description.label }}
+                        {{ form.description(style='width: 500px; color: black; resize: none;', rows=14, class='form-control') }}
+                    </div>
+                    <div style="position: absolute; left: 1115px">
+                        {{ form.concession.label }}
+                        {{ form.concession(style='width: 350px; color: black; resize: none;', rows=7, class='form-control') }}
+
+                    </div>
+                </div>
+                <div class="mt-1 mb-1">
+                    <label for="categoryId">Жанр:
+                        <select id="genreId" name="genreId" required>
+                            {% for genre in genres %}
+                                <option value="{{ genre['id'] }}">{{ genre['name'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+                {{ form.name.label }}
+                {{ form.name(style='width: 250px; color: black; margin-bottom: 10px', class='form-control') }}
+                {% for field in form if field.name in ['countOfMembers'] %}
+                    <div class="form-group" style="width: 250px; margin-bottom: 10px">
+                        {{ field.label() }}
+                        <div>
+                            {% if field.errors %}
+                                {{ field(style='color: black', class="invalid-feedback", placeholder=field.description) }}
+                                {% for e in field.errors %}
+                                    <span class="invalid-feedback">{{ e }}</span>
+                                {% endfor %}
+                            {% else %}
+                                {{ field(style='color: black', class="form-control", placeholder=field.description) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+                <div>
+                    <label for="validateStatus">Валидация участников: </label>
+                    <ul style="list-style-type: none; margin-left: -30px">
+                        <li><input type="radio" id="validateStatus" name="validateStatus" value="REQUIRED" required>
+                            Обязательно
+                        </li>
+                        <li><input type="radio" id="validateStatus" name="validateStatus" value="OPTIONAL">
+                            Необязательно
+                        </li>
+                        <li><input type="radio" id="validateStatus" name="validateStatus" value="NOT_REQUIRED"> Без
+                            валидации
+                        </li>
+                    </ul>
+                </div>
+                <div style="margin-top: 10px">
+                    <h5>Даты и время проведения:</h5>
+                    <div id="dateTimeContainer" style="display: flex; width: 250px">
+                        <div>
+                            <div style="width: max-content;">
+                                {{ form.startDateTime.label }}
+                                <div style=";text-align: center">
+                                    {{ form.startDateTime(class='form-control', style='color: black; width: 250px') }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-left: 35px">
+                            {% if form.endDateTime.errors %}
+                                {% for e in form.endDateTime.errors %}
+                                    <div class="invalid-feedback">{{ e }}</div>
+                                {% endfor %}
+                                <div style="align-items: center">
+                                    {{ form.endDateTime.label }}
+                                    <div>
+                                        {{ form.endDateTime(class="form-control",
+                                            style='background-color: #f2dede; color: black') }}
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div style="width: max-content;">
+                                    {{ form.endDateTime.label }}
+                                    <div style="text-align: center">
+                                        {{ form.endDateTime(class='form-control', style='color: black; width: 250px') }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-body border-0 shadow"
+                 style="margin-bottom: 15px; background-color: #c2c2c2; margin-top: 15px; height: 40px">
+                <div style="display: flex;">
+                    <span style="font-size: 18px; font-weight: 500; margin-top: -13px ">Место проведения</span>
+                </div>
+            </div>
+
+
+            <div style="display: flex">
+                <div style="display: table">
+                    {% for field in form if field.name in ['venueName', 'country', 'state', 'city', 'address', 'seats'] %}
+                        {{ field.label() }}
+                        {% if field.errors %}
+                            <div>
+                                {{ field(class="invalid-feedback", placeholder=field.description) }}
+                                {% for e in field.errors %}
+                                    <span class="invalid-feedback">{{ e }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div>
+                                {{ field(class="form-control", style='color: black; width: 250px' , placeholder=field.description) }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <span class="mb-4" style="margin-left: 52px; font-weight: 500;">Фотография:</span>
+                <div class="card card-body border-0 shadow"
+                     style="margin-top: 32px; width: 800px; height: 350px; position: absolute;  left: 600px;">
+                    <div class="align-items-center">
+                        <div class="d-flex">
+                            <div>
+                                <div class="d-flex mb-3">
+                                    <svg class="icon text-gray-500 me-2" fill="currentColor"
+                                         viewBox="0 0 20 20"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                              clip-rule="evenodd"></path>
+                                    </svg>
+                                    <div class="d-md-block text-left">
+                                        <div class="fw-normal text-dark mb-1">Загрузите фотографию</div>
+                                        <div class="text-gray small">JPG/JPEG или PNG.</div>
+                                    </div>
+                                </div>
+                                <input type="file" id="venueImage" name="photos"
+                                       accept="image/jpeg, image/png"/>
+                            </div>
+                            <div style="width: 400px; height: 300px; margin-left: -20px">
+                                <img id="venueImageEdit"
+                                     src="https://www.volvogroup.com/content/dam/volvo-group/markets/master/news-and-media/1860x1050_news-and-media_upcoming-events.gif"
+                                     alt="Фотография места мероприятия"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 390px; margin-left: -100px">
+                    {{ form.venueDescription.label }}
+                    {{ form.venueDescription(class="form-control", rows=7, style=';width: 800px; color: black; resize: none;') }}
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 25px;margin-bottom: 50px; display: flex; justify-content: center">
+            {{ form.submit(class="btn btn-secondary d-flex align-items-center justify-content-center") }}
+            <a class="btn btn-gray-800 d-inline-flex align-items-center me-2" style="margin-left: 20px"
+               href="/">Назад</a>
+        </div>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+    <script src="{{ url_for('static', filename='js/photo_editor.js') }}"></script>
+{% endblock %}
+<script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/@popperjs/core/dist/umd/popper.min.js"></script>
+<script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-django-v1.0.8/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>
