@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>
+        {% block title %}Добавление мероприятия{% endblock %}
+    </title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wtforms_messages.css') }}">
+</head>
+
+<body>
+{% block page_title %}Добавление мероприятия{% endblock page_title %}
+
+{% block main %}
+
+    <form action="/event/create" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="card mt-2 mb-4">
+            <div class="table-header shadow" style="background-color: #f8e7c9">
+                <div class="card-body">
+                    <span class="h5">Основная информация</span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="mb-1">
+                            <label for="organizerId">Организатор:
+                                <select class="form-select mt-2" style="width: 250px" id="organizerId"
+                                        name="organizerId" required>
+                                    {% for organizer in user_organizers %}
+                                        <option value="{{ organizer['id'] }}">{{ organizer['name'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+                        <div class="mb-1">
+                            <label for="categoryId">Жанр:
+                                <select class="form-select mt-2" style="width: 250px" id="genreId" name="genreId"
+                                        required>
+                                    {% for genre in genres %}
+                                        <option value="{{ genre['id'] }}">{{ genre['name'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+
+                        {{ form.name.label }}
+                        {{ form.name(style='width: 250px; color: black; margin-bottom: 10px', class='form-control') }}
+
+                        {{ form.countOfMembers.label() }}
+                        {% if form.countOfMembers.errors %}
+                            {{ form.countOfMembers(style='background-color: #f2dede; width: 250px; color: black',
+                                                        class="form-control", placeholder=form.countOfMembers.description) }}
+                            <div style="text-align: center; font-size: 14px; color: #a94442; width: 250px;">
+                                {{ form.countOfMembers.errors[0] }}
+                            </div>
+                        {% else %}
+                            {{ form.countOfMembers(style='color: black; width: 250px;', class="form-control", placeholder=form.countOfMembers.description) }}
+                        {% endif %}
+
+                        <div>
+                            <label style="margin-top: 10px" for="validateStatus">Валидация участников: </label>
+                            <ul style="list-style-type: none; margin-left: -30px">
+                                <li><input type="radio" id="validateStatus" name="validateStatus"
+                                           value="REQUIRED"
+                                           required>
+                                    Обязательно
+                                </li>
+                                <li><input type="radio" id="validateStatus" name="validateStatus"
+                                           value="OPTIONAL">
+                                    Необязательно
+                                </li>
+                                <li><input type="radio" id="validateStatus" name="validateStatus"
+                                           value="NOT_REQUIRED">
+                                    Без
+                                    валидации
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        {{ form.description.label }}
+                        {{ form.description(rows=18, class='form-control') }}
+                    </div>
+                    <div class="col-4">
+                        {{ form.concession.label }}
+                        {{ form.concession(rows=18, class='form-control') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="table-header shadow" style="background-color: #f8e7c9">
+                <div class="card-body">
+                    <span class="h5">Даты и время проведения</span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div id="dateTimeContainer" class="d-flex">
+                    <div class="me-5">
+                        <div style="width: max-content;">
+                            {{ form.startDateTime.label }}
+                            <div style=";text-align: center">
+                                {{ form.startDateTime(class='form-control', style='color: black; width: 250px') }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        {% if form.endDateTime.errors %}
+                            <div style="align-items: center">
+                                {{ form.endDateTime.label }}
+                                <div>
+                                    {{ form.endDateTime(class="form-control",
+                                            style='background-color: #f2dede; color: black; width: 250px') }}
+                                </div>
+                                <div style="text-align: center; font-size: 14px; color: #a94442">
+                                    {{ form.endDateTime.errors[0] }}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div style="width: max-content;">
+                                {{ form.endDateTime.label }}
+                                <div style="text-align: center">
+                                    {{ form.endDateTime(class='form-control', style='color: black; width: 250px') }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="table-header shadow" style="background-color: #f8e7c9">
+                <div class="card-body">
+                    <span class="h5">Банка мероприятия</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="d-flex">
+                        <div class="me-5">
+                            {{ form.expectedAmount.label }}
+                            {{ form.expectedAmount(style='width: 250px; color: black; margin-bottom: 10px', class='form-control') }}
+                        </div>
+                        <div>
+                            {{ form.recommendedDonation.label }}
+                            {{ form.recommendedDonation(style='width: 250px; color: black; margin-bottom: 10px', class='form-control') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-header shadow" style="background-color: #f8e7c9">
+                <div class="card-body">
+                    <span class="h5">Место проведения</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                        {% for field in form if field.name in ['venueName', 'country', 'state', 'city', 'address', 'seats'] %}
+                            {{ field.label }}
+                            {% if field.errors %}
+                                <div>
+                                    {{ field(class="form-control mb-1",
+                                        style='background-color: #f2dede; color: black; width: 250px', placeholder=field.description) }}
+                                    {% for e in field.errors %}
+                                        <span class="invalid-feedback">{{ e }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div>
+                                    {{ field(class="form-control mb-2", style='color: black; width: 250px;' , placeholder=field.description) }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="col-5">
+                        <div class="mb-2">
+                            {{ form.venueDescription.label }}
+                            {{ form.venueDescription(class="form-control", rows=21) }}
+                        </div>
+                    </div>
+                    <div class=" col-4">
+                        <div class="mb-2">Фотография:</div>
+                        <div class="card card-body shadow justify-content-center">
+                            <div class="mb-3 d-flex">
+                                <svg class="icon text-gray-500 me-2" fill="currentColor"
+                                     viewBox="0 0 20 20"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                          d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                          clip-rule="evenodd"></path>
+                                </svg>
+                                <div class=" text-left">
+                                    <div class="fw-normal text-dark mb-1">Загрузите фотографию</div>
+                                    <div class="small text-gray-500">JPG/JPEG или PNG.</div>
+                                </div>
+                            </div>
+                            <div>
+                                <input type="file" id="venueImage" name="photos"
+                                       accept="image/jpeg, image/png"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div style="margin-top: 25px;margin-bottom: 50px; display: flex; justify-content: center">
+            {{ form.submit(class="btn btn-secondary d-flex align-items-center justify-content-center") }}
+            <a class="btn btn-gray-800 d-inline-flex align-items-center me-2" style="margin-left: 20px"
+               href="/">Назад</a>
+        </div>
+    </form>
+{% endblock %}
+
+</body>
+</html>

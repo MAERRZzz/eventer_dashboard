@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="canonical" href="https://appseed.us/product/volt-dashboard/django/">
+
+    <title>
+        {% block title %}Персональные настройки{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wtforms_messages.css') }}">
+
+    <style>
+        .button {
+            display: block;
+            height: 38px;
+            background: #FFD914;
+            border-radius: 12px;
+            text-transform: uppercase;
+            line-height: 24px;
+            border: none;
+            width: 100%;
+            margin: 0 auto;
+            transition: background .15s linear;
+        }
+
+        .button:hover {
+            background: #FFA914;
+            transition: background .15s linear;
+        }
+    </style>
+</head>
+
+<body>
+{% block page_title %}Персональные настройки{% endblock page_title %}
+
+{% block main %}
+    <form action="/user/settings/{{ session['userId'] }}" method="post" enctype="multipart/form-data">
+
+        <div class="card mt-2 mb-4">
+            <div class="table-header shadow" style="background-color: #f8e7c9">
+                <div class="card-body">
+                    <span class="h5">Основная информация</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="d-flex">
+                        <div class="col-5 me-6">
+                            <div>
+                                <label for="lastName">Фамилия: </label>
+                                <div>
+                                    <input style="color: black" class="form-control mb-2" type="text" id="lastName"
+                                           name="lastName"
+                                           value="{{ user_info['lastName'] }}">
+                                </div>
+
+                                <label for="firstName">Имя: </label>
+                                <div>
+                                    <input style="color: black" class="form-control mb-2" type="text" id="firstName"
+                                           name="firstName" value="{{ user_info['firstName'] }}">
+                                </div>
+                                <label for="middleName">Отчество: </label>
+                                <div>
+                                    <input style="color: black" class="form-control mb-2" type="text"
+                                           id="middleName" name="middleName" value="{{ user_info['middleName'] }}">
+                                </div>
+
+                                <label for="birthday">Дата рождения: </label>
+                                <div>
+                                    <input style="color: black" class="form-control mb-2" type="date" id="birthday"
+                                           name="birthday" value="{{ user_info['birthday'] }}" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-5">
+                            <span class="fw-bold">Фотография:</span>
+                            <div class="card card-body shadow mt-2 mb-2">
+                                <div class="align-items-center">
+                                    <div class="d-flex">
+                                        <div>
+                                            <div class="d-flex mb-3">
+                                                <svg class="icon text-gray-500 me-2" fill="currentColor"
+                                                     viewBox="0 0 20 20"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd"
+                                                          d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                          clip-rule="evenodd"></path>
+                                                </svg>
+                                                <div class="d-md-block text-left">
+                                                    <div class="fw-normal text-dark mb-1">Загрузите фотографию</div>
+                                                    <div class="text-gray small">JPG/JPEG или PNG.</div>
+                                                </div>
+                                            </div>
+                                            <input type="file" id="avatarImage" name="logo"
+                                                   accept="image/jpeg, image/png"/>
+                                        </div>
+                                        <div style="margin-left: 10px">
+                                            <img id="avatarImageEdit"
+                                                 src="{{ user_info['avatar'] }}"
+                                                 alt="Фотография"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="table-header shadow" style="background-color: #f8e7c9">
+                <div class="card-body">
+                    <span class="h5">Банковские реквизиты</span>
+                </div>
+            </div>
+
+            <div class="card-body mb-2">
+                <div class="row">
+                    <div class="d-flex">
+
+                        <div class="me-5">
+                            <label for="email">E-mail:</label>
+                            <div style="display: flex;">
+                                <div style="width: 250px">
+                                    <div class="form-control"> {{ user_email }}</div>
+                                </div>
+
+                                <div>
+                                    <a class="btn btn-gray-800 d-inline-flex align-items-center me-2"
+                                       style="margin-left: 20px"
+                                       href="#">Изменить</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="password">Пароль:</label>
+                            <div style="display: flex;">
+                                <div style="width: 250px">
+                                    <div class="form-control">••••••</div>
+                                </div>
+
+                                <div>
+                                    <a class="btn btn-gray-800 d-inline-flex align-items-center me-2"
+                                       style="margin-left: 20px"
+                                       href="#">Изменить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px;margin-bottom: 50px; display: flex; justify-content: center">
+            <button class="btn btn-secondary d-flex align-items-center justify-content-center">
+                Сохранить
+                изменения
+            </button>
+            <a class="btn btn-gray-800 d-inline-flex align-items-center me-2"
+               style="margin-left: 20px"
+               href="/">Назад</a>
+        </div>
+    </form>
+
+{% endblock %}
+</body>
+</html>

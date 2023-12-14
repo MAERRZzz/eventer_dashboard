@@ -1,0 +1,27 @@
+/* Общие настройки стиля сообщений */
+.success-msg, .danger-msg, .info-msg {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Стили для сообщения об успехе */
+.success-msg {
+    background-color: #dff0d8;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+/* Стили для информационного сообщения */
+.info-msg {
+    background-color: #d9edf7;
+    color: #31708f;
+    border: 1px solid #bce8f1;
+}
+
+/* Стили для сообщения об ошибке */
+.danger-msg {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}

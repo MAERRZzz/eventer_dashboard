@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        {% block title %}Главная страница{% endblock %}
+    </title>
+</head>
+
+<body>
+{% block page_title %}
+    <div class="dropdown">
+        <a href="/event/create">
+            <button class="btn btn-gray-800 d-inline-flex align-items-center me-2 dropdown-toggle"
+                    aria-haspopup="true" aria-expanded="false">
+                <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Добавить мероприятие
+            </button>
+        </a>
+    </div>
+{% endblock page_title %}
+
+{% block main %}
+
+    {% if user_organizers %}
+        {% if organizer_events %}
+            <div class="row">
+                {% for event in organizer_events %}
+                    <div class="mb-2 row d-block d-xl-flex align-items-center container"
+                         style="width: 417px; margin-left:1px">
+                        <div class="card border-0 shadow">
+                            <div class="card-body">
+                                <div class=" text-xl-center mb-2 d-flex align-items-center justify-content-xl-center">
+                                    <img style="border-radius: 8px; width: 320px; height: 180px"
+                                         src="{{ event.venues[0].photos[0] }}"
+                                         alt="">
+                                </div>
+                                <div>
+                                    <div>
+                                        <h6 class="text-gray-400 mb-0">{{ event['organizer']['name'] }}</h6>
+                                        <div class="justify-content-between d-flex">
+                                        <h5 class="fw-extrabold mb-1">
+                                            <span class="venueName">{{ event['name'] }}</span>
+                                        </h5>
+                                            <a href="/event/edit/{{ event['id'] }}">
+                                            <button style="padding: 2px; background-color: #c9ced7;"
+                                                    class="btn d-inline-flex align-items-center">
+                                                <img width="20"
+                                                     src="https://img.icons8.com/?size=512&id=AuMLFRmG95tQ&format=png"
+                                                     alt="">
+                                            </button>
+                                        </a>
+
+                                        </div>
+                                    </div>
+                                    <small class="align-items-center text-gray-500">
+                                        {{ event['eventDates'][0]['startDateTime'] }}
+                                        - {{ event['eventDates'][0]['endDateTime'] }}
+                                        <div style="margin-bottom: 12px">
+                                            <img style="margin-top: -4px" width="16px"
+                                                 src="https://img.icons8.com/?size=512&id=Hh5ONdvsAI4P&format=png"
+                                                 alt="">
+                                            {{ event['venues'][0]['city']['name'] }}, {{ event['venues'][0]['address'] }}
+                                        </div>
+                                    </small>
+
+                                    <!-- Button Modal -->
+                                    <div class="small d-flex justify-content-between align-items-center">
+                                        <div data-bs-toggle="modal" data-bs-target="#modal-piggy-bank{{ loop.index }}"
+                                             style="cursor: pointer;">
+                                            <div class="d-flex align-items-center">
+                                                <img width="20" height="20"
+                                                     src="https://img.icons8.com/?size=512&id=KiABGKCqbFG8&format=png"
+                                                     alt="">
+                                                <div class="p-lg-2">
+
+                                                    <div class="text-center" style="width: 140px">
+                                                        {{ event.total_amount|int }} ₽/ {{ event.expectedAmount|int }} ₽
+                                                    </div>
+                                                    <div class="">
+                                                        <div class="progress-wrapper">
+                                                            <div class="progress mb-0">
+                                                                {% set donat_procents = ((event.total_amount|int)/(event.expectedAmount|int))*100 %}
+                                                                {% if donat_procents < 25 %}
+                                                                    {% set bar_color = 'bg-danger' %}
+                                                                {% endif %}
+                                                                {% if 25 < donat_procents < 75 %}
+                                                                    {% set bar_color = 'bg-warning' %}
+                                                                {% endif %}
+                                                                {% if 75 < donat_procents %}
+                                                                    {% set bar_color = 'bg-success' %}
+                                                                {% endif %}
+                                                                <div class="progress-bar {{ bar_color }}"
+                                                                     role="progressbar"
+                                                                     aria-valuenow="75" aria-valuemin="0"
+                                                                     aria-valuemax="100"
+                                                                     style="width: {{ event.total_percent }}%;">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div data-bs-toggle="modal" data-bs-target="#modal-members{{ loop.index }}"
+                                             style="cursor: pointer;">
+                                            <img style="margin-top: -3px" width="20"
+                                                 src="https://img.icons8.com/?size=512&id=4r3xdsxcmOTJ&format=png"
+                                                 alt="">
+                                            {{ event.bookings|length }} / {{ event.countOfMembers }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {#                    <!-- Piggy bank modal  -->#}
+                    <div class="modal fade" id="modal-piggy-bank{{ loop.index }}" tabindex="-1" role="dialog"
+                         aria-labelledby="modal-default" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="h6 modal-title">Поддержали</h2>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {% if event.event_donations %}
+                                        {% for event_donation in event.event_donations %}
+                                            <div class="media d-flex align-items-center mb-3">
+                                                <img width="45" height="45" class="rounded-circle"
+                                                     src="{{ event_donation.user.avatar }}" alt="">
+                                                <div class="media-body ms-2 text-dark align-items-center d-flex d-lg-block">
+                                                  <span class="mb-0 fw-bold text-gray-900">
+                                                      <strong>{{ event_donation.user.firstName }} {{ event_donation.user.lastName }}</strong>
+                                                  </span>
+                                                    <div class="mb-0 fw-bold text-gray-900">
+                                                        <strong>{{ event_donation.total_amount|int }} ₽</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        Список пуст.
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Piggy bank modal  -->
+
+                    <!-- Modal Content -->
+                    <div class="modal fade" id="modal-members{{ loop.index }}" tabindex="-1" role="dialog"
+                         aria-labelledby="modal-default" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="h6 modal-title">Получили билет</h2>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {% if event.bookings %}
+
+                                        {% for booking in event.bookings %}
+                                            <div class="media d-flex align-items-center mb-1">
+                                                <img width="45" height="45" class="rounded-circle"
+                                                     src="{{ booking.user.avatar }}" alt="">
+                                                <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
+                                                  <span class="mb-0 fw-bold text-gray-900">
+                                                      <strong>{{ booking.user.firstName }} {{ booking.user.lastName }}</strong>
+                                                  </span>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+
+                                    {% else %}
+                                        Список пуст.
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Modal Content -->
+                {% endfor %}
+            </div>
+        {% else %}
+
+            <div class="card card-body border-0 shadow table-wrapper table-responsive" style="margin-bottom: 450px">
+                <div style="display: flex;">
+                    <span style="color: gray">У вас нет мероприятий.</span>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="card card-body border-0 shadow table-wrapper table-responsive" style="margin-bottom: 450px">
+            <div style="display: flex;">
+                <a style="color: blue" href="/organizer/create">Добавьте организатора</a>, чтобы проводить мероприятия.
+            </div>
+        </div>
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='js/name_limit.js') }}"></script>
+{% endblock %}
+
+</body>
+</html>

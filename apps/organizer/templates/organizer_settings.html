@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}Редактирование организатора{% endblock %}
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/flash_messages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wtforms_messages.css') }}">
+    {#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css"/>#}
+    {#    <link rel="stylesheet" href="{{ url_for('static', filename='css/photo_editor.css') }}">#}
+</head>
+
+<body>
+{% block page_title %}Редактирование организатора{% endblock page_title %}
+
+{% block main %}
+    <form action="/organizer/settings/{{ organizer_info['id'] }}" method="post" enctype="multipart/form-data">
+
+        <div class="card mt-2 mb-4">
+            <div class="table-header shadow" style="background-color: #f8e7c9">
+                <div class="card-body">
+                    <span class="h5">Основная информация</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="d-flex">
+                        <div class="col-5 me-6">
+                            <div>
+                                <label for="name">Имя:</label>
+                                <div>
+                                    <input class="form-control mb-2" id="name" maxlength="150" name="name"
+                                           placeholder="" required=""
+                                           type="text" style='color: black'
+                                           value="{{ organizer_info['name'] }}">
+                                </div>
+                                <div>
+                                    <label for="description">Описание:</label>
+                                    <textarea class="form-control mb-2" id="description" maxlength="800"
+                                              name="description"
+                                              placeholder="" rows=14, style='color: black; resize: none;'
+                                    >{{ organizer_info['description'] }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-5">
+                            <span class="fw-bold">Фотография:</span>
+                            <div class="card card-body shadow mt-2 mb-2">
+                                <div class="align-items-center">
+                                    <div class="d-flex">
+                                        <div>
+                                            <div class="d-flex mb-3">
+                                                <svg class="icon text-gray-500 me-2" fill="currentColor"
+                                                     viewBox="0 0 20 20"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd"
+                                                          d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                          clip-rule="evenodd"></path>
+                                                </svg>
+                                                <div class="d-md-block text-left">
+                                                    <div class="fw-normal text-dark mb-1">Загрузите фотографию</div>
+                                                    <div class="text-gray small">JPG/JPEG или PNG.</div>
+                                                </div>
+                                            </div>
+                                            <input type="file" id="avatarImage" name="logo"
+                                                   accept="image/jpeg, image/png"/>
+                                        </div>
+                                        <div style="margin-left: 10px">
+                                            <img id="avatarImageEdit"
+                                                 src="{{ organizer_info['logo'] }}"
+                                                 alt="Фотография"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="mb-4 fw-bold">Обложка:</span>
+                            <div class="card card-body shadow mt-2 mb-2">
+                                <div class="align-items-center">
+                                    <div class="d-flex">
+                                        <div>
+                                            <div class="d-flex mb-3">
+                                                <svg class="icon text-gray-500 me-2" fill="currentColor"
+                                                     viewBox="0 0 20 20"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd"
+                                                          d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                                          clip-rule="evenodd"></path>
+                                                </svg>
+                                                <div class="d-md-block text-left">
+                                                    <div class="fw-normal text-dark mb-1">Загрузите фотографию</div>
+                                                    <div class="text-gray small">JPG/JPEG или PNG.</div>
+                                                </div>
+                                            </div>
+                                            <input type="file" id="backgroundImage" name="background"
+                                                   accept="image/jpeg, image/png"/>
+                                        </div>
+                                        <div style="margin-left: -40px">
+                                            <img id="backgroundImageEdit"
+                                                 src="{{ organizer_info['background'] }}"
+                                                 alt="Фотография места мероприятия"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="table-header shadow" style="background-color: #f8e7c9">
+                <div class="card-body">
+                    <span class="h5">Банковские реквизиты</span>
+                </div>
+            </div>
+
+            <div class="card-body mb-2">
+                <div class="row">
+                    <div class="d-flex">
+
+                        <div class="me-5">
+                            <label for="cardNumber">Номер банковской карты:</label>
+                            <div style="text-align: center">
+                                <input class="form-control" id="cardNumber" name="cardNumber" required=""
+                                       type="text" style='color: black; width: 250px'
+                                       value="{{ organizer_info['cardNumber'] }}">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="cardHolderName">Владелец карты:</label>
+                            <div style="text-align: center">
+                                <input class="form-control" id="cardHolderName" name="cardHolderName" required=""
+                                       type="text" style='color: black; width: 250px'
+                                       value="{{ organizer_info['cardHolderName'] }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="table-header shadow" style="background-color: #f8e7c9">
+                <div class="card-body">
+                    <span class="h5">Социальные сети</span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="d-flex">
+                        <div class="me-5">
+                            <label for="vk">VK:</label>
+                            <input class="form-control" id="vk" maxlength="150" name="vk"
+                                   placeholder="Макс. длина - 200"
+                                   type="text" style='width: 250px; color: black'
+                                   value="{{ organizer_info['vk'] }}">
+                        </div>
+                        <div class="me-5">
+                            <label for="telegram">Telegram:</label>
+                            <input class="form-control" id="telegram" maxlength="150" name="telegram"
+                                   placeholder="Макс. длина - 200"
+                                   type="text" style='width: 250px; color: black; margin-bottom: 10px'
+                                   value="{{ organizer_info['telegram'] }}">
+                        </div>
+                        <div class="me-5">
+                            <label for="facebook">Facebook:</label>
+                            <input class="form-control" id="facebook" maxlength="150" name="facebook"
+                                   placeholder="Макс. длина - 200"
+                                   type="text" style='width: 250px; color: black; margin-bottom: 10px'
+                                   value="{{ organizer_info['facebook'] }}">
+                        </div>
+                        <div class="me-5">
+                            <label for="twitter">Twitter:</label>
+                            <input class="form-control" id="twitter" maxlength="150" name="twitter"
+                                   placeholder="Макс. длина - 200"
+                                   type="text" style='width: 250px; color: black; margin-bottom: 10px'
+                                   value="{{ organizer_info['twitter'] }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 25px;margin-bottom: 20px; display: flex; justify-content: center">
+            <button class="btn btn-secondary d-flex align-items-center justify-content-center">
+                Сохранить
+                изменения
+            </button>
+            <a class="btn btn-gray-800 d-inline-flex align-items-center me-2"
+               style="margin-left: 20px"
+               href="/">Назад</a>
+        </div>
+        <div style="justify-content: center; display: flex; margin-bottom: 50px;">
+            <a class="btn btn-danger d-inline-flex align-items-center me-2"
+               style="margin-left: 10px"
+               href="/organizer/delete/{{ organizer_info['id'] }}">Удалить организатора</a>
+        </div>
+    </form>
+
+{% endblock %}
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>#}
+{#<script src="{{ url_for('static', filename='js/photo_editor.js') }}"></script>#}
+</body>
+</html>
